@@ -1,6 +1,7 @@
 <template>
     <main>
         <h1>Bag</h1>
+        <div v-if="products.length==0">Bag is empty for now :(</div>
         <product v-for="product in products"
             @click="goToProduct(product.id)"
             :product="product"

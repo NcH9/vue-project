@@ -3,13 +3,10 @@
   <main class="main">
     <div class="grid">
       <div>
-        <div class="flex-center">
-          <RouterLink class="linkToSearch" :to="{name: 'search'}">Search:</RouterLink>
-        </div>
           <nav>
-            <v-tabs class="flex-between">
+            <v-tabs fixed-tabs>
               <RouterLink :to="{name: 'home'}"><v-tab>Home</v-tab></RouterLink>
-              <RouterLink to="/catalogue"><v-tab>Catalogue</v-tab></RouterLink>
+              <RouterLink :to="{name: 'search'}"><v-tab>Catalogue</v-tab></RouterLink>
               <RouterLink to="/bag"><v-tab>Bag</v-tab></RouterLink>
               <v-tab><signModule /></v-tab>
             </v-tabs>

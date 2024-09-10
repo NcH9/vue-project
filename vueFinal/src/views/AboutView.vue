@@ -2,7 +2,7 @@
   <div class="flex-center">
     <div class="grid">
       <h1>This is an about us page</h1><br>
-      <div>DEV - <a href="mailto:Nosach.M.K@nmu.one">Nosach.M.K@nmu.one</a></div>
+      <div>DEV - <a href="mailto:Nosach.N.K@gmail.com">Nosach.N.K@gmail.com</a></div>
     </div>
   </div>
 </template>

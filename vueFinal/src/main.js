@@ -54,6 +54,13 @@ if(getCookie('isAdmin')){
 } else {
   app.config.globalProperties.$isAdmin = false;
 }
+
+
+app.directive('clickable', {
+  mounted(el){
+    el.style.cursor = 'pointer';
+  }
+});
 app.use(createPinia())
 app.use(router)
 app.use(vuetify)

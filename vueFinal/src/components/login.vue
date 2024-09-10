@@ -120,7 +120,7 @@ input::-webkit-inner-spin-button {
 input {
     padding: 5px;
     margin: 5px;
-    background-color: rgb(138, 137, 137);
+    background-color: rgb(255, 255, 255);
     border-radius: 15px;
 }
 input:focus {

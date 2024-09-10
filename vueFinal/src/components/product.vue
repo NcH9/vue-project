@@ -1,5 +1,5 @@
 <template>
-    <div class="bubble">
+    <div class="bubble" v-clickable>
         <div class="grid2" >
             <div class="margin"><img class="img" :src="product.image"/></div>
             <div class="title">{{product.title}}</div>
@@ -102,7 +102,8 @@ button {
     margin: 15px;
     padding: 15px;
     color: black;
-    box-shadow: 3px -3px 5px rgb(140, 140, 140);
+    box-shadow: 5px -5px 5px rgb(163, 163, 163);
+    border: solid 1px rgb(102, 102, 102);
 }
 .img {
     max-width: 100px;

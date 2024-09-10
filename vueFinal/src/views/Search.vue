@@ -1,11 +1,15 @@
 <template>
-    <input class="searchbar" type="text" v-model="searchTerm" />
-    <v-btn @click="findProduct">Search</v-btn>
-    <div v-for="(product, index) in productToShow" :key="index">
-        <product 
-            @click="goToProduct(product.id)"
-            :product="product"
-        />
+    <div class="flex-around">
+        <input class="searchbar" type="text" v-model="searchTerm" />
+        <v-btn @click="findProduct">Search</v-btn>
+    </div>
+    <div>
+        <div v-for="(product, index) in productToShow" :key="index">
+            <product 
+                @click="goToProduct(product.id)"
+                :product="product"
+            />
+        </div>
     </div>
 </template>
   
@@ -61,12 +65,23 @@ export default {
 </script>
 <style scoped>
 .searchbar{
-    margin-top: 15px;
+    /* margin-top: 15px; */
+    
     min-width: 350px;
     border-radius: 15px;
-    background-color: rgb(102, 102, 102);
+    background-color: rgb(255, 255, 255);
+    border: 1px solid black;
     padding: 5px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: large;
+}
+.flex-around {
+    display: flex;
+    justify-content: space-around;
+    place-items: center;
+}
+.grid3 {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
 }
 </style>
