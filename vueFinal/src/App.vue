@@ -1,34 +1,83 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <main class="main">
+    <div class="grid">
+      <div>
+        <div class="flex-center">
+          <RouterLink class="linkToSearch" :to="{name: 'search'}">Search:</RouterLink>
+        </div>
+          <nav>
+            <v-tabs class="flex-between">
+              <RouterLink :to="{name: 'home'}"><v-tab>Home</v-tab></RouterLink>
+              <RouterLink to="/catalogue"><v-tab>Catalogue</v-tab></RouterLink>
+              <RouterLink to="/bag"><v-tab>Bag</v-tab></RouterLink>
+              <v-tab><signModule /></v-tab>
+            </v-tabs>
+          </nav>
+        <RouterView />
+      </div>
+      <footer>
+        <RouterLink to="/about">About us</RouterLink>
+      </footer>
     </div>
-  </header>
-
-  <RouterView />
+  </main>
+  
 </template>
+
+
+
+<script setup>
+import '@/assets/slider.css'
+import '@/components/signModule.vue'
+import signModule from '@/components/signModule.vue';
+
+</script>
+
+
 
 <style scoped>
 header {
   line-height: 1.5;
   max-height: 100vh;
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.linkToSearch {
+  font-size: 32px;
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+}
+.grid {
+  display: grid;
+}
+.main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+footer {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+.flex-center{
+  display: flex;
+  justify-content: center;
+}
+.searchbar{
+  margin-top: 15px;
+  min-width: 350px;
+  border-radius: 15px;
+  background-color: rgb(102, 102, 102);
+  padding: 5px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: large;
+}
+.searchbar:focus{
+  background-color: rgb(184, 184, 184);
+}
+.flex-between{
+  display: flex;
+  justify-content: space-between;
 }
 
 nav {
@@ -36,6 +85,7 @@ nav {
   font-size: 12px;
   text-align: center;
   margin-top: 2rem;
+  margin: 10px;
 }
 
 nav a.router-link-exact-active {
