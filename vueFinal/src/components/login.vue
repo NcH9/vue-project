@@ -4,112 +4,92 @@
 
             <div class="grid2">
                 <label>Email</label>
-                <input type="email" v-model.lazy="form.email" @blur="validateEmail"/>
+                <input type="email" v-model.lazy="form.email" @blur="validateEmail(form.email)"/>
                 <span>{{ form.email }}</span>
                 <span class="error">{{ error.email }}</span>
             </div>
 
             <div class="grid2">
                 <label>Password</label>
-                <input type="password" v-model.lazy="form.password" @blur="validatePassword"/>
+                <input type="password" v-model.lazy="form.password" @blur="validatePassword(form.password)"/>
                 <span>{{ form.password }}</span>
                 <span class="error">{{ error.password }}</span>
             </div>
-            <button type="submit" v-if="!isLoggedIn" @click="login">Log in</button>
-            <button type="submit" v-if="isLoggedIn" @click="login">Log out</button>
+            <button type="submit" v-if="!isLoggedIn">Log in</button>
+            <button type="submit" v-if="isLoggedIn">Log out</button>
         </div>
     </form>
 </template>
   
 <script>
-    import { auth } from '@/main'
-    import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
-    export default {
-        name: 'login',
-        
-        data(){
-            return {
-                form: {
-                    password: '',
-                    email: '',
-                },
-                error: {
-                    password: '',
-                    email: '',
-                },
-                isLoggedIn: false,
+import { auth } from '@/main'
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { formValidation } from '@/mixins/formValidation';
+export default {
+    name: 'login',
+    mixins: [formValidation],
+    data(){
+        return {
+            form: {
+                password: '',
+                email: '',
+            },
+            isLoggedIn: false,
+        }
+    },
+    methods: {
+        async login(){
+            if (this.isLoggedIn){
+                try {
+                    await signOut(auth);
+                    this.isLoggedIn = !this.isLoggedIn;
+                    console.log('logout successful!')
+                } catch (error){
+                    console.log(error)
+                }
+                
+            } else {
+                signInWithEmailAndPassword(auth, this.form.email, this.form.password)
+                    .then(userCredential => {
+                        const user = userCredential.user;
+                        console.log(auth.currentUser);
+                        alert('login is successful');
+                        this.$router.push({name: 'home'});
+                    })
+                    .catch(error => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        console.log(errorCode, errorMessage);
+                        alert('login is not successful')
+                    })
             }
         },
-        methods: {
-            async login(){
-                if (this.isLoggedIn){
-                    try {
-                        await signOut(auth);
-                        this.isLoggedIn = !this.isLoggedIn;
-                        console.log('logout successful!')
-                    } catch (error){
-                        console.log(error)
-                    }
-                    
-                } else {
-                    signInWithEmailAndPassword(auth, this.form.email, this.form.password)
-                        .then(userCredential => {
-                            const user = userCredential.user;
-                            console.log(auth.currentUser);
-                            console.log('login successful!');
-                        })
-                        .catch(error => {
-                            const errorCode = error.code;
-                            const errorMessage = error.message;
-                            console.log(errorCode, errorMessage);
-                        })
-                }
-                this.$router.push({name: 'home'});
-            },
-            submitForm(){
-                console.log('formsubmitted');
-                this.resetForm();
-            },
-            resetForm(){
-                this.form = {
-                    password: '',
-                    email: '',
-                };
-                this.error = {
-                    password: '',
-                    email: '',
-                };
-            },
-            validatePassword() {
-                if (this.form.password.length < 5) {
-                    this.error.password = 'Password must be at least 5 characters long.';
-                } else {
-                    this.error.password = '';
-                }
-            },
-            validateEmail() {
-                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailPattern.test(this.form.email)) {
-                    this.error.email = 'Please enter a valid email address.';
-                } else {
-                    this.error.email = '';
-                }
-            },
-            validateForm() {
-                this.validateEmail();
-                this.validatePassword();
-                if (!this.error.email && !this.error.password){
-                    this.submitForm();
-                }
-            }
+        async submitForm(){
+            await this.login();
+            this.resetForm();
         },
-        mounted() {
-            if (auth.currentUser){
-                this.isLoggedIn = true;
-                console.log(auth.currentUser)
+        resetForm(){
+            this.form = {
+                password: '',
+                email: '',
+            };
+            this.resetError();
+        },
+        validateForm() {
+            this.validateEmail(this.form.email);
+            this.validatePassword(this.form.password);
+            if (!this.error.email && !this.error.password){
+                this.submitForm();
             }
         }
-    };
+    },
+    mounted() {
+        if (auth.currentUser){
+            this.isLoggedIn = true;
+            console.log(auth.currentUser)
+        }
+    }
+};
 </script>
 <style scoped>
 input::-webkit-outer-spin-button,

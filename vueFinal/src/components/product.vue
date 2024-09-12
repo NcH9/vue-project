@@ -4,10 +4,11 @@
             <div class="margin"><img class="img" :src="product.image"/></div>
             <div class="title">{{product.title}}</div>
         </div>
-        <div>price $: {{product.price}}</div>
+        <div class="price">price $: {{product.price}}</div>
         <div v-if="isProductInBag"><v-btn @click.stop="deleteFromBag(product.id)">Delete</v-btn></div>
         <div v-if="!isProductInBag"><v-btn @click.stop="addToBag">Add To Bag</v-btn></div>
     </div>
+    <slot name="additionalData"></slot>
 </template>
 
 <script type="module">
@@ -25,14 +26,14 @@ export default {
         },
     },
     methods: {
-        goToProduct(id){
-            this.$router.push({
-                name: 'product-page',
-                params: {
-                    id: id
-                }
-            })
-        },
+        // goToProduct(id){
+        //     this.$router.push({
+        //         name: 'product-page',
+        //         params: {
+        //             id: id
+        //         }
+        //     })
+        // },
         toggleInBag() {
             this.$emit('delete-product', this.product.id);
         },
@@ -90,11 +91,25 @@ export default {
 <style scoped>
 button {
     border-radius: 15px;
-    background-color: rgb(78, 180, 78);
+    background-color: rgb(7, 194, 122);
     margin-top: 10px;
     min-width: 100px;
     color: white;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.price {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10% 30% 50% 70%;
+    place-items: center;
+    border: 1px solid rgb(128, 128, 128);
+    color: white;
+    background: linear-gradient(0.25turn, rgb(136, 57, 136), rgb(137, 0, 250)) ;
+    max-width: 200px;
+    font-size: 16px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 .bubble{
     background-color: white;

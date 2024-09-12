@@ -2,10 +2,17 @@
 <template>
     <main>
         <h1>Profile page</h1>
-        <div>
-            <p class="info">Your email: {{ currentUser.email }}</p>
-        </div>
-        <button type="submit" v-if="isLoggedIn" @click="logout">Log out</button>
+        <v-card class="ma-2">
+            <div>
+                <p class="info">Your username: {{ currentUser.displayName }}</p>
+            </div>
+        </v-card>
+        <v-card class="ma-2">
+            <div>
+                <p class="info">Your email: {{ currentUser.email }}</p>
+            </div>
+        </v-card>
+        <v-btn v-if="isLoggedIn" @click="logout" class="ma-3">Log out</v-btn>
     </main>
 </template>
 
@@ -109,12 +116,10 @@ export default {
 
 <style scoped>
 button{
-    background-color: rgb(196, 196, 196);
-    margin: 15px;
-    padding: 10px;
+    background-color: rgb(255, 255, 255);
     border-radius: 15px;
     color: rgb(21, 21, 21);
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-size: 20px;
     font-weight: 600;
 }

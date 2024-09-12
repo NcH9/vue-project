@@ -1,5 +1,5 @@
 <template>
-    <div class="flex-around">
+    <div class="flex-center">
         <input 
             class="searchbar" 
             type="text" 
@@ -9,9 +9,11 @@
         <v-btn @click="findProduct">Search</v-btn>
     </div>
     <div v-if="!errors">
-        <div v-for="(product, index) in productToShow" :key="index">
+        <div v-for="(product, index) in productToShow" 
+        :key="index"
+        @click="goToProduct(product.id)">
             <product 
-                @click="goToProduct(product.id)"
+                
                 :product="product"
             />
         </div>
@@ -135,12 +137,14 @@ export default {
     background-color: rgb(255, 255, 255);
     border: 1px solid black;
     padding: 5px;
+    padding-left: 20px;
+    margin-right: 10px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: large;
 }
-.flex-around {
+.flex-center {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     place-items: center;
 }
 .grid3 {

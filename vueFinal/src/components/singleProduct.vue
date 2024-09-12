@@ -7,14 +7,17 @@
             <product
                 v-if="product"
                 :product="product"
-            />
+            >
+                <template #additionalData>
+                    <div class="description1">
+                        <p class="description2" v-if="product">{{ product.description }}</p>
+                        <p class="description2">quality - 10/10<br>produced by best specialists</p>
+                    </div>
+                </template>
+            </product>
         </div>
-        <div class="description1">
-            <p class="description2" v-if="product">{{ product.description }}</p>
-            <!-- <slot></slot> -->
-            <p class="description2">quality - 10/10</p>
-            <p class="description2">produced by best specialists</p>
-        </div>
+        
+        
     </main>
 </template>
 

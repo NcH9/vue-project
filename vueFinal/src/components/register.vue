@@ -3,23 +3,30 @@
         <div class="grid">
 
             <div class="grid2">
+                <label>Username</label>
+                <input type="email" v-model.lazy="form.username" @blur="validateUsername(form.username)"/>
+                <span>{{ form.username }}</span>
+                <span class="error">{{ error.username }}</span>
+            </div>
+
+            <div class="grid2">
                 <label>Email</label>
-                <input type="email" v-model.lazy="form.email" @blur="validateEmail"/>
+                <input type="email" v-model.lazy="form.email" @blur="validateEmail(form.email)"/>
                 <span>{{ form.email }}</span>
                 <span class="error">{{ error.email }}</span>
             </div>
 
             <div class="grid2">
                 <label>Password</label>
-                <input type="password" v-model.lazy="form.password" @blur="validatePassword"/>
+                <input type="password" v-model.lazy="form.password" @blur="validatePassword(form.password)"/>
                 <span>{{ form.password }}</span>
                 <span class="error">{{ error.password }}</span>
             </div>
 
-            <!-- <div class="grid2">
+            <div class="grid2">
                 <label>Admin</label>
                 <input type="checkbox" v-model.lazy="form.worship"/>
-            </div> -->
+            </div>
 
             <button type="submit" @click="validateForm">Register</button>
         </div>
@@ -27,77 +34,110 @@
 </template>
   
 <script>
-    import{ auth } from '@/main'
-    import { createUserWithEmailAndPassword } from 'firebase/auth';
-    export default {
-        name: 'register',
-        data(){
-            return {
-                form: {
-                    password: '',
-                    email: '',
-                    worship: false,
-                },
-                error: {
-                    password: '',
-                    email: '',
-                },
+import{ auth } from '@/main'
+import { formValidation } from '@/mixins/formValidation';
+import { updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { addDoc, collection } from "firebase/firestore";
+import { db } from '@/main';
+export default {
+    name: 'register',
+    data(){
+        return {
+            userUID: '',
+            form: {
+                username: '',
+                password: '',
+                email: '',
+                worship: false,
+            },
+            // error: {
+            //     password: '',
+            //     email: '',
+            //     username: '',
+            // },
+        }
+    },
+    mixins: [formValidation],
+    methods: {
+        async register(){
+            await createUserWithEmailAndPassword(auth, this.form.email, this.form.password)
+                .then(userCredential => {
+                    const user = userCredential.user;
+                    this.userUID = userCredential.user.uid;
+                    updateProfile(user, {
+                        displayName: this.form.username,
+                    });
+                    console.log(auth.currentUser)
+                })
+                .catch(error => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorCode, errorMessage);
+                })
+        },
+        async addUser(){
+            try {
+                const docRef = await addDoc(collection(db, 'users'), {
+                    userUID: this.userUID,
+                    isAdmin: this.form.worship,
+                })
+                console.log('document is writted with id:', docRef.id)
+            } catch (error){
+                console.log(`error occured: ${error}`)
             }
         },
-        methods: {
-            register(){
-                createUserWithEmailAndPassword(auth, this.form.email, this.form.password)
-                    .then(userCredential => {
-                        const user = userCredential.user;
-                        console.log(auth.currentUser)
-                    })
-                    .catch(error => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        console.log(errorCode, errorMessage);
-                    })
-            },
-            submitForm(){
-                console.log('formsubmitted');
-                register();
-                this.resetForm();
-            },
-            resetForm(){
-                this.form = {
-                    password: '',
-                    email: '',
-                    worship: false,
-                };
-                this.error = {
-                    password: '',
-                    email: '',
-                };
-            },
-            validatePassword() {
-                if (this.form.password.length < 5) {
-                    this.error.password = 'Password must be at least 5 characters long.';
-                } else {
-                    this.error.password = '';
-                }
-            },
-            validateEmail() {
-                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailPattern.test(this.form.email)) {
-                    this.error.email = 'Please enter a valid email address.';
-                } else {
-                    this.error.email = '';
-                }
-            },
-            validateForm() {
-                this.validateEmail();
-                this.validatePassword();
-                if (!this.error.email && !this.error.password){
-                    this.submitForm();
-                    this.$router.push({name: 'home'});
-                }
+        async submitForm(){
+            await this.register();
+            await this.addUser();
+            console.log('formsubmitted');
+            this.resetForm();
+        },
+        resetForm(){
+            this.form = {
+                password: '',
+                email: '',
+                worship: false,
+            };
+            // this.error = {
+            //     password: '',
+            //     email: '',
+            // };
+            this.resetError();
+        },
+        // validatePassword() {
+        //     if (this.form.password.length < 5) {
+        //         this.error.password = 'Password must be at least 5 characters long.';
+        //     } else {
+        //         this.error.password = '';
+        //     }
+        // },
+        // validateEmail() {
+        //     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        //     if (!emailPattern.test(this.form.email)) {
+        //         this.error.email = 'Please enter a valid email address.';
+        //     } else {
+        //         this.error.email = '';
+        //     }
+        // },
+        // validateUsername(){
+        //     if (this.form.password.username < 5) {
+        //         this.error.username = 'Username must be at least 5 characters long.';
+        //     } else {
+        //         this.error.username = '';
+        //     }
+        // },
+        validateForm() {
+            this.validateEmail(this.form.email);
+            this.validatePassword(this.form.password);
+            this.validateUsername(this.form.username);
+            if (!this.error.email && !this.error.password && !this.username){
+                this.submitForm();
+                this.$router.push({name: 'home'});
             }
         }
-    };
+    }
+};
 </script>
 <style scoped>
 input::-webkit-outer-spin-button,

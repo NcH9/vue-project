@@ -4,6 +4,7 @@ export const formValidation = {
             error: {
                 email: '',
                 password: '',
+                username: '',
             }
         }
     },
@@ -23,10 +24,19 @@ export const formValidation = {
                 this.error.email = '';
             }
         },
+        validateUsername(username){
+            console.log(username)
+            if (username.length < 5) {
+                this.error.username = 'Username must be at least 5 characters long.';
+            } else {
+                this.error.username = '';
+            }
+        },
         resetError(){
             this.error = {
                 email: '',
                 password: '',
+                username: '',
             }
             console.log('errors reseted');
         }

@@ -3,16 +3,22 @@
   <main class="main">
     <div class="grid">
       <div>
-          <nav>
+        <div class="grid2">
+          <div class="flex-center2">
+            <clock v-draggable></clock>
+          </div>
+          <nav >
             <v-tabs fixed-tabs>
               <RouterLink :to="{name: 'home'}"><v-tab>Home</v-tab></RouterLink>
               <RouterLink :to="{name: 'search'}"><v-tab>Catalogue</v-tab></RouterLink>
               <RouterLink to="/bag"><v-tab>Bag</v-tab></RouterLink>
-              <v-tab><signModule /></v-tab>
+              <signModule class="signModule"/>
             </v-tabs>
           </nav>
+        </div>
         <RouterView />
       </div>
+
       <footer>
         <RouterLink to="/about">About us</RouterLink>
       </footer>
@@ -27,6 +33,7 @@
 import '@/assets/slider.css'
 import '@/components/signModule.vue'
 import signModule from '@/components/signModule.vue';
+import clock from './components/clock.vue';
 
 </script>
 
@@ -46,6 +53,11 @@ header {
 .grid {
   display: grid;
 }
+.signModule{
+  display: flex;
+  justify-content: center;
+  place-items: top;
+}
 .main {
   display: flex;
   justify-content: center;
@@ -59,6 +71,19 @@ footer {
 .flex-center{
   display: flex;
   justify-content: center;
+  margin: 15px;
+}
+.flex-center2{
+  display: flex;
+  justify-content: center;
+  place-items: center;
+  margin-right: 15px;
+  min-width: 150px;
+  z-index: 1000;
+}
+.grid2{
+  display: grid;
+  grid-template-columns: 150px auto;
 }
 .searchbar{
   margin-top: 15px;

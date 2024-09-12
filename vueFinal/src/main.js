@@ -14,6 +14,7 @@ import * as directives from 'vuetify/directives'
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -30,35 +31,55 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp)
+const db = getFirestore(firebaseApp);
+const auth = getAuth(firebaseApp);
 
-export { auth }
+export { auth, db }
 
 const vuetify = createVuetify({
     components,
     directives
 })
-function getCookie(name) {
-  const nameEQ = name + "=";
-  const ca = document.cookie.split(';');
-  for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-  }
-  return null;
-}
 const app = createApp(App)
-if(getCookie('isAdmin')){
-  app.config.globalProperties.$isAdmin = getCookie('isAdmin');
-} else {
-  app.config.globalProperties.$isAdmin = false;
-}
-
 
 app.directive('clickable', {
   mounted(el){
     el.style.cursor = 'pointer';
+  }
+});
+app.directive('draggable', {
+  mounted(el){
+    el.style.position = 'absolute';
+    el.style.cursor = 'grab'
+
+    let mousePosX = 0, mousePosY = 0;
+
+    const onMouseDown = (event) => {
+        event.preventDefault();
+
+        mousePosX = event.clientX;
+        mousePosY = event.clientY; 
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    };
+    const onMouseMove = (event) => {
+        event.preventDefault();
+
+        const moveDiffX = event.clientX - mousePosX;
+        const moveDiffY = event.clientY - mousePosY;
+
+        el.style.left = `${el.offsetLeft + moveDiffX}px`
+        el.style.top = `${el.offsetTop + moveDiffY}px`
+
+        mousePosX = event.clientX;
+        mousePosY = event.clientY;
+    };
+    const onMouseUp = () => {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+    }
+    el.addEventListener('mousedown', onMouseDown);
   }
 });
 app.use(createPinia())

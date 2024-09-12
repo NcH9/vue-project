@@ -2,17 +2,22 @@
     <main>
         <h1>Bag</h1>
         <div v-if="products.length==0">Bag is empty for now :(</div>
-        <product v-for="product in products"
+        <div
+            v-for="product in products"
             @click="goToProduct(product.id)"
-            :product="product"
-            @delete-product="toggleInBag(product.id)"
-        />
+        >
+            <product 
+                :product="product"
+                @delete-product="toggleInBag(product.id)"
+            />
+        </div>
+        
     </main>
 </template>
 <script type="module">
 import product from '@/components/product.vue';
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 export default {
     name: 'bag',
     components: {
@@ -23,7 +28,7 @@ export default {
             products = ref([]),
             productInBag = ref('');
 
-        const router = useRoute();
+        const router = useRouter();
         function goToProduct(id){
             router.push({
                 name: 'product-page',
