@@ -47,6 +47,27 @@ app.directive('clickable', {
     el.style.cursor = 'pointer';
   }
 });
+app.directive('addTooltipOnHover', {
+  mounted(el, binding) {
+      let tooltipElement;
+      const showTooltip = () => {
+          tooltipElement = document.createElement('div');
+          tooltipElement.textContent = binding.value;
+          tooltipElement.style.backgroundColor = `rgba(22, 98, 51, 0.5)`;
+          tooltipElement.style.borderRadius = `30%`;
+          tooltipElement.style.padding = `15px`;
+          document.getElementById(el.id).appendChild(tooltipElement);
+      };
+      const hideTooltip = () => {
+          if (tooltipElement){
+              document.getElementById(el.id).removeChild(tooltipElement);
+              tooltipElement = null;
+          }
+      }
+      el.addEventListener('mouseenter', showTooltip);
+      el.addEventListener('mouseleave', hideTooltip);
+  },
+});
 app.directive('draggable', {
   mounted(el){
     el.style.position = 'absolute';

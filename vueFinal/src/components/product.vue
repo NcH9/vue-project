@@ -4,7 +4,7 @@
             <div class="margin"><img class="img" :src="product.image"/></div>
             <div class="title">{{product.title}}</div>
         </div>
-        <div class="price">price $: {{product.price}}</div>
+        <div class="price" :id="product.id" v-addTooltipOnHover="isCheap">price $: {{product.price}}</div>
         <div v-if="isProductInBag"><v-btn @click.stop="deleteFromBag(product.id)">Delete</v-btn></div>
         <div v-if="!isProductInBag"><v-btn @click.stop="addToBag">Add To Bag</v-btn></div>
     </div>
@@ -17,6 +17,7 @@ export default {
     data() {
         return {
             isProductInBag: '',
+            isCheap: '',
         }
     },
     props: {
@@ -26,14 +27,6 @@ export default {
         },
     },
     methods: {
-        // goToProduct(id){
-        //     this.$router.push({
-        //         name: 'product-page',
-        //         params: {
-        //             id: id
-        //         }
-        //     })
-        // },
         toggleInBag() {
             this.$emit('delete-product', this.product.id);
         },
@@ -78,6 +71,11 @@ export default {
                 handler(newVal) {
                     if (newVal) {
                         this.isProductInBag = this.getIfProductInBag();
+                        if(Number(newVal.price)<100){
+                            this.isCheap = 'Yeah, it`s that cheap';
+                        } else {
+                            this.isCheap = 'You might be a little broke for this...'
+                        }
                     }
             }
         }

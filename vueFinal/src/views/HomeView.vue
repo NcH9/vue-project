@@ -8,7 +8,7 @@ export default {
   <main>
     <div class="grid">
       <h1 class="flex-center">Main page</h1>
-      <p class="flex-center"><a href="https://fakestoreapi.com/">fakestore api</a> production</p>
+      <p class="flex-center">products presented by <a href="https://fakestoreapi.com/">fakestore api</a></p>
       <img src="https://i.ytimg.com/vi/Z9bNysDAHac/maxresdefault.jpg">
     </div>
   </main>
@@ -30,5 +30,13 @@ img{
   display: flex;
   justify-content: center;
   place-items: center;
+}
+a {
+  color: rgb(54, 123, 90);
+  padding: 5px;
+}
+a:hover {
+  background-color: rgba(54, 123, 90, 0.5);
+  border-radius: 15px;
 }
 </style>
