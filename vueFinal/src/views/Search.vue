@@ -186,4 +186,7 @@ export default {
     color: rgb(66, 66, 66);
     font-weight: 700;
 }
+button {
+    margin-left: 10px;
+}
 </style>

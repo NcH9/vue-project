@@ -1,7 +1,7 @@
 <template>
     <main>
-        <h1>Bag</h1>
-        <div v-if="products.length==0">Bag is empty for now :(</div>
+        <h1 class="flex-center">Bag</h1>
+        <div v-if="products.length==0" class="flex-center">Bag is empty for now :(</div>
         <div
             v-for="product in products"
             @click="goToProduct(product.id)"
@@ -98,6 +98,10 @@ export default {
 // }
 </script>
 <style>
+.flex-center {
+    display: flex;
+    justify-content: center;
+}
 .bubble{
     background-color: white;
     border-radius: 15px;

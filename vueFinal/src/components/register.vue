@@ -4,7 +4,7 @@
 
             <div class="grid2">
                 <label>Username</label>
-                <input type="email" v-model.lazy="form.username" @blur="validateUsername(form.username)"/>
+                <input type="text" v-model.lazy="form.username" @blur="validateUsername(form.username)"/>
                 <span>{{ form.username }}</span>
                 <span class="error">{{ error.username }}</span>
             </div>
@@ -104,7 +104,7 @@ export default {
             if (!this.error.email && !this.error.password && !this.username){
                 await this.submitForm();
                 this.$router.push({name: 'home'});
-                window.location.href = {name: 'home'};
+                window.location.href = '/';
             }
         }
     }

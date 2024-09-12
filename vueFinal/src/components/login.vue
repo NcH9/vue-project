@@ -25,60 +25,6 @@
 import { auth } from '@/main'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { formValidation } from '@/mixins/formValidation';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-// export default {
-//     name: 'login',
-//     mixins: [formValidation],
-//     setup(){
-//         const 
-//             router = useRouter(),
-//             form = ref({
-//                 password: '',
-//                 email: '',
-//             });
-//         async function login(){
-//             signInWithEmailAndPassword(auth, form.value.email, form.value.password)
-//                 .then(userCredential => {
-//                     const user = userCredential.user;
-//                     console.log(auth.currentUser);
-//                     alert('login is successful');
-//                     router.push({name: 'home'});
-//                     window.location.reload();
-//                 })
-//                 .catch(error => {
-//                     const errorCode = error.code;
-//                     const errorMessage = error.message;
-//                     console.log(errorCode, errorMessage);
-//                     alert('login is not successful')
-//                 })
-//         };
-//         async function submitForm(){
-//             await login();
-//             this.resetForm();
-//         };
-//         function resetForm(){
-//             form.value = {
-//                 password: '',
-//                 email: '',
-//             };
-//             this.resetError();
-//         };
-//         function validateForm() {
-//             this.validateEmail(this.form.email);
-//             this.validatePassword(this.form.password);
-//             if (!this.error.email && !this.error.password){
-//                 submitForm();
-//             }
-//         }
-//         return {
-//             // data
-//             form,
-//             // methods
-//             login, submitForm, resetForm, validateForm
-//         }
-//     }
-// }
 export default {
     name: 'login',
     mixins: [formValidation],
@@ -109,7 +55,7 @@ export default {
         async submitForm(){
             await this.login();
             this.resetForm();
-            window.location.href = {name: '/'};
+            window.location.href = '/';
         },
         resetForm(){
             this.form = {
