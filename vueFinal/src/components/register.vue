@@ -51,11 +51,6 @@ export default {
                 email: '',
                 worship: false,
             },
-            // error: {
-            //     password: '',
-            //     email: '',
-            //     username: '',
-            // },
         }
     },
     mixins: [formValidation],
@@ -81,6 +76,7 @@ export default {
                 const docRef = await addDoc(collection(db, 'users'), {
                     userUID: this.userUID,
                     isAdmin: this.form.worship,
+                    username: this.form.username,
                 })
                 console.log('document is writted with id:', docRef.id)
             } catch (error){
@@ -99,41 +95,16 @@ export default {
                 email: '',
                 worship: false,
             };
-            // this.error = {
-            //     password: '',
-            //     email: '',
-            // };
             this.resetError();
         },
-        // validatePassword() {
-        //     if (this.form.password.length < 5) {
-        //         this.error.password = 'Password must be at least 5 characters long.';
-        //     } else {
-        //         this.error.password = '';
-        //     }
-        // },
-        // validateEmail() {
-        //     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        //     if (!emailPattern.test(this.form.email)) {
-        //         this.error.email = 'Please enter a valid email address.';
-        //     } else {
-        //         this.error.email = '';
-        //     }
-        // },
-        // validateUsername(){
-        //     if (this.form.password.username < 5) {
-        //         this.error.username = 'Username must be at least 5 characters long.';
-        //     } else {
-        //         this.error.username = '';
-        //     }
-        // },
-        validateForm() {
+        async validateForm() {
             this.validateEmail(this.form.email);
             this.validatePassword(this.form.password);
             this.validateUsername(this.form.username);
             if (!this.error.email && !this.error.password && !this.username){
-                this.submitForm();
+                await this.submitForm();
                 this.$router.push({name: 'home'});
+                window.location.href = {name: 'home'};
             }
         }
     }

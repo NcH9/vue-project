@@ -13,6 +13,7 @@
               <RouterLink :to="{name: 'search'}"><v-tab>Catalogue</v-tab></RouterLink>
               <RouterLink to="/bag"><v-tab>Bag</v-tab></RouterLink>
               <signModule class="signModule"/>
+              <RouterLink v-if="isAdmin" :to="{name: 'admin-panel'}"><v-tab>Admin panel</v-tab></RouterLink>
             </v-tabs>
           </nav>
         </div>
@@ -34,7 +35,43 @@ import '@/assets/slider.css'
 import '@/components/signModule.vue'
 import signModule from '@/components/signModule.vue';
 import clock from './components/clock.vue';
+import { auth, db } from './main';
+import { onMounted, ref } from 'vue';
+import { collection, getDocs, query } from 'firebase/firestore';
 
+const 
+  isAdmin = ref(false),
+  users = ref([]);
+async function getUsers(){
+  const usersRef = collection(db, 'users');
+  const q = query(usersRef);
+  const querySnapshot = await getDocs(q);
+  users.value = querySnapshot.docs.map((doc)=>{
+    return {
+      id: doc.id,
+      ...doc.data()
+    }
+  })
+};
+function getIsUserAdmin() {
+  if (auth.currentUser){
+    const user = users.value.find(user => user.userUID === auth.currentUser.uid);
+    // console.log(user.isAdmin)
+    isAdmin.value = user.isAdmin
+  }
+};
+onMounted(async()=>{
+  await getUsers();
+  getIsUserAdmin();
+  console.log(isAdmin.value)
+})
+// return {
+//   // data
+//   isAdmin, users,
+
+//   // methods
+//   getUsers, getIsUserAdmin
+// }
 </script>
 
 

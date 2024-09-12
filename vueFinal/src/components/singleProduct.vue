@@ -35,28 +35,17 @@ export default {
         product,
     },
     setup(){
-        // const products = ref([]);
         const
             product = ref({}),
             route = useRoute(), 
             productStore = useProductStore();
+            
         onMounted(async ()=>{
             await productStore.getProducts('');
             let id = +route.params.id;
             console.log(productStore.state.products)
             product.value = productStore.state.products.find(product => product.id === id);
         });
-
-        // onComputed(async()=>{
-            
-        // });
-        // computed: {
-        //     product(){
-        //         let id = +route.params.id;
-        //         return this.products.find(product => product.id === id);
-        //     }
-        // },
-
         return {
             // data
             product,

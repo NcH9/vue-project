@@ -7,13 +7,19 @@
             placeholder="search the product..."
         />
         <v-btn @click="findProduct">Search</v-btn>
+        <v-btn @click="seeFilter">Filter</v-btn>
+    </div>
+    <div v-show="filterVisible">
+        <filtrator
+            v-model="selectedOption"
+            @onchange="handleSelectionChange"
+        />
     </div>
     <div v-if="!errors">
         <div v-for="(product, index) in productToShow" 
         :key="index"
         @click="goToProduct(product.id)">
             <product 
-                
                 :product="product"
             />
         </div>
@@ -27,6 +33,7 @@
   
 <script>
 import product from '@/components/product.vue';
+import filtrator from '@/components/filtrator.vue';
 
 import { useProductStore } from '@/stores/productStore';
 import { onMounted, ref } from 'vue';
@@ -35,24 +42,30 @@ import { useRouter } from 'vue-router';
 export default {
     name: 'Search',
     components: {
-        product
+        product,
+        filtrator
     },
     setup(){
         const
+            selectedOption = ref(''),
             productStore = useProductStore(),
+            filterVisible = ref(false),
             productToShow = ref([]),
             searchTerm = ref(''),
             errors = ref(false);
 
         const router = useRouter();
         onMounted(async ()=>{
-            await productStore.getProducts('');
+            await filtrator('');
+        });
+        async function filtrator(data){
+            await productStore.getProducts(data);
             if (!productStore.state.error){
                 productToShow.value = productStore.state.products;
             } else {
                 errors.value = true;
             }
-        })
+        }
         function findProduct(){
             productToShow.value = []
             for (let product of productStore.state.products){
@@ -71,14 +84,27 @@ export default {
                 }
             })
         };
+        function seeFilter(){
+            filterVisible.value = !filterVisible.value
+        }
+        async function handleSelectionChange(newSelection) {
+            selectedOption.value = newSelection;
+            await filtrator(selectedOption.value);
+        }
         return {
+            // methods
             findProduct,
             goToProduct,
+            seeFilter,
+            handleSelectionChange,
 
+            // data
             productStore,
             productToShow,
             searchTerm,
-            errors
+            errors,
+            filterVisible,
+            selectedOption
         }
     }
 }

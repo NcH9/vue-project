@@ -34,7 +34,8 @@ export default {
                     await signOut(auth);
                     isLoggedIn.value = !isLoggedIn.value;
                     console.log('logout successful!');
-                    router.push({name: 'home'});
+                    await router.push({name: 'home'});
+                    window.location.reload();
                 } catch (error){
                     alert('Some mistake occured. You were not logged out');
                 }

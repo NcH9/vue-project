@@ -59,6 +59,11 @@ const router = createRouter({
       name: 'search',
       component: () => import('../views/Search.vue'),
     },
+    {
+      path: '/admin',
+      name: 'admin-panel',
+      component: () => import('../views/Admin.vue'),
+    },
   ]
 })
 
