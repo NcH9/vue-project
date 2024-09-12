@@ -1,11 +1,6 @@
-<script module>
+<script type="module">
 export default {
   name: 'Home',
-  data(){
-    return{
-      
-    }
-  }
 }
 </script>
 

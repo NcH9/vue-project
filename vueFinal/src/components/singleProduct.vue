@@ -11,8 +11,9 @@
         </div>
         <div class="description1">
             <p class="description2" v-if="product">{{ product.description }}</p>
-            <p class="description2">quality - best</p>
-            <p class="description2">produced - by best jewellers</p>
+            <!-- <slot></slot> -->
+            <p class="description2">quality - 10/10</p>
+            <p class="description2">produced by best specialists</p>
         </div>
     </main>
 </template>
@@ -20,43 +21,81 @@
 
 <script module>
 import product from '@/components/product.vue';
-import axiosInstance from '@/services/axios';
+import { computed, onMounted, ref } from 'vue';
+import { useProductStore } from '@/stores/productStore';
+import { useRoute } from 'vue-router';
+// import axiosInstance from '@/services/axios';
 
 export default {
     name: 'productPage',
-    data() {
-        return {
-            products: [],
-        }
-    },
-    methods: {
-        getProducts(){
-            axiosInstance.get('products/category/jewelery')
-                .then(response => {
-                    this.products = response.data;
-                })
-                .catch(error => {
-                    console.log(error)
-                })        
-        },
-    },
-    created() {
-        if (!this.products.length){
-            this.getProducts();
-        }
-    },
-    computed: {
-        product(){
-            let id = +this.$route.params.id;
-            return this.products.find(product => product.id === id);
-        }
-    },
     components: {
         product,
+    },
+    setup(){
+        // const products = ref([]);
+        const
+            product = ref({}),
+            route = useRoute(), 
+            productStore = useProductStore();
+        onMounted(async ()=>{
+            await productStore.getProducts('');
+            let id = +route.params.id;
+            console.log(productStore.state.products)
+            product.value = productStore.state.products.find(product => product.id === id);
+        });
+
+        // onComputed(async()=>{
+            
+        // });
+        // computed: {
+        //     product(){
+        //         let id = +route.params.id;
+        //         return this.products.find(product => product.id === id);
+        //     }
+        // },
+
+        return {
+            // data
+            product,
+
+            // methods
+        };
     }
 }
+// export default {
+//     name: 'productPage',
+//     components: {
+//         product,
+//     },
+//     data() {
+//         return {
+//             products: [],
+//         }
+//     },
+//     methods: {
+//         getProducts(){
+//             axiosInstance.get('products/category/jewelery')
+//                 .then(response => {
+//                     this.products = response.data;
+//                 })
+//                 .catch(error => {
+//                     console.log(error)
+//                 })        
+//         },
+//     },
+//     mounted() {
+//         if (!this.products.length){
+//             this.getProducts();
+//         }
+//     },
+//     computed: {
+//         product(){
+//             let id = +this.$route.params.id;
+//             return this.products.find(product => product.id === id);
+//         }
+//     },
+// }
 </script>
-
 
 <style scoped>
 .description1 {

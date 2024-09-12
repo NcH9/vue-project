@@ -1,9 +1,14 @@
 <template>
     <div class="flex-around">
-        <input class="searchbar" type="text" v-model="searchTerm" />
+        <input 
+            class="searchbar" 
+            type="text" 
+            v-model="searchTerm" 
+            placeholder="search the product..."
+        />
         <v-btn @click="findProduct">Search</v-btn>
     </div>
-    <div>
+    <div v-if="!errors">
         <div v-for="(product, index) in productToShow" :key="index">
             <product 
                 @click="goToProduct(product.id)"
@@ -11,62 +16,120 @@
             />
         </div>
     </div>
+    <div v-else>
+        <p class="error">
+            There is some mistake on the server
+        </p>
+    </div>
 </template>
   
-<script type="module">
-import axiosInstance from '@/services/axios';
+<script>
 import product from '@/components/product.vue';
+
+import { useProductStore } from '@/stores/productStore';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 export default {
-    name: 'Admin',
-    data(){
-        return{
-            products: [],
-            productToShow: [],
-            searchTerm: '',
-        }
+    name: 'Search',
+    components: {
+        product
     },
-    methods: {
-        getProducts(){
-            axiosInstance.get(`products/category/jewelery`)
-                .then(response => {
-                    this.products = response.data;
-                    this.productToShow = response.data;
-                })
-                .catch(error => {
-                    console.log(error)
-                })        
-        },
-        findProduct(){
-            this.productToShow = []
-            for (let product of this.products){
+    setup(){
+        const
+            productStore = useProductStore(),
+            productToShow = ref([]),
+            searchTerm = ref(''),
+            errors = ref(false);
+
+        const router = useRouter();
+        onMounted(async ()=>{
+            await productStore.getProducts('');
+            if (!productStore.state.error){
+                productToShow.value = productStore.state.products;
+            } else {
+                errors.value = true;
+            }
+        })
+        function findProduct(){
+            productToShow.value = []
+            for (let product of productStore.state.products){
                 console.log(product.title)
-                console.log(this.searchTerm)
-                if (product.title.toLowerCase().trim().includes(this.searchTerm.toLowerCase().trim())){
-                    this.productToShow.push(product);
+                console.log(searchTerm)
+                if (product.title.toLowerCase().trim().includes(searchTerm.value.toLowerCase().trim())){
+                    productToShow.value.push(product);
                 }
             }
-        },
-        goToProduct(id){
-            this.$router.push({
+        };
+        function goToProduct(id){
+            router.push({
                 name: 'product-page',
                 params: {
                     id: id
                 }
             })
-        },
-    },
-    mounted(){
-        this.getProducts();
-    },
-    components: {
-        product,
-    },
-};
+        };
+        return {
+            findProduct,
+            goToProduct,
+
+            productStore,
+            productToShow,
+            searchTerm,
+            errors
+        }
+    }
+}
+
+// export default {
+//     name: 'Search',
+//     data(){
+//         return{
+//             products: [],
+//             productToShow: [],
+//             searchTerm: '',
+//         }
+//     },
+//     methods: {
+//         getProducts(){
+//             axiosInstance.get(`products/category/jewelery`)
+//                 .then(response => {
+//                     this.products = response.data;
+//                     this.productToShow = response.data;
+//                 })
+//                 .catch(error => {
+//                     console.log(error)
+//                 })        
+//         },
+//         findProduct(){
+//             this.productToShow = []
+//             for (let product of this.products){
+//                 console.log(product.title)
+//                 console.log(this.searchTerm)
+//                 if (product.title.toLowerCase().trim().includes(this.searchTerm.toLowerCase().trim())){
+//                     this.productToShow.push(product);
+//                 }
+//             }
+//         },
+//         goToProduct(id){
+//             this.$router.push({
+//                 name: 'product-page',
+//                 params: {
+//                     id: id
+//                 }
+//             })
+//         },
+//     },
+//     mounted(){
+//         this.getProducts();
+//     },
+//     components: {
+//         product,
+//     },
+// };
 </script>
 <style scoped>
 .searchbar{
-    /* margin-top: 15px; */
-    
     min-width: 350px;
     border-radius: 15px;
     background-color: rgb(255, 255, 255);
@@ -83,5 +146,14 @@ export default {
 .grid3 {
     display: grid;
     grid-template-columns: repeat(2, auto);
+}
+.error {
+    display: flex;
+    justify-content: center;
+    place-items: center;
+    font-size: 30px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: rgb(66, 66, 66);
+    font-weight: 700;
 }
 </style>

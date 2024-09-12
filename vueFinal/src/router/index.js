@@ -18,11 +18,11 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue')
     },
-    {
-      path: '/catalogue',
-      name: 'catalogue',
-      component: () => import('../views/Catalogue.vue')
-    },
+    // {
+    //   path: '/catalogue',
+    //   name: 'catalogue',
+    //   component: () => import('../views/Catalogue.vue')
+    // },
     {
       path: '/bag',
       name: 'bag',
@@ -53,11 +53,6 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: () => import('../views/Profile.vue'),
-    },
-    {
-      path: '/admin',
-      name: 'admin',
-      component: () => import('../views/Admin.vue'),
     },
     {
       path: '/search',

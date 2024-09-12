@@ -11,42 +11,86 @@
 </template>
 <script type="module">
 import product from '@/components/product.vue';
-    export default {
-        name: 'bag',
-        data(){
-            return {
-                products: [],
-                productInBag: '',
-            }
-        },
-        methods: {
-            getProducts(){
-                this.products = JSON.parse(localStorage.getItem('bag'));
-                if (this.product){
-                    this.products.forEach(product => {
-                        product.inBag = true;
-                    })
-                } 
-            },
-            goToProduct(id){
-                this.$router.push({
-                    name: 'product-page',
-                    params: {
-                        id: id
-                    }
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+export default {
+    name: 'bag',
+    components: {
+        product,
+    },
+    setup(){
+        const 
+            products = ref([]),
+            productInBag = ref('');
+
+        const router = useRoute();
+        function goToProduct(id){
+            router.push({
+                name: 'product-page',
+                params: {
+                    id: id
+                }
+            })
+        };
+
+        function toggleInBag(id){
+            products.value = products.value.filter(product => product.id != id)
+        };
+
+        function getProductsInBag(){
+            products.value = JSON.parse(localStorage.getItem('bag'));
+            if (products.value){
+                products.value.forEach(product => {
+                    product.inBag = true;
                 })
-            },
-            toggleInBag(id){
-                this.products = this.products.filter(product => product.id != id)
-            }
-        },
-        mounted(){
-            this.getProducts()
-        },
-        components: {
-            product,
+            } 
+        };
+
+        onMounted(() => {
+            getProductsInBag();
+        });
+
+        return {
+            // data
+            products, productInBag, 
+
+            // methods
+            goToProduct, toggleInBag, getProductsInBag,
         }
     }
+}
+// export default {
+    // data(){
+    //     return {
+    //         products: [],
+    //         productInBag: '',
+    //     }
+    // },
+    // methods: {
+    //     getProducts(){
+    //         this.products = JSON.parse(localStorage.getItem('bag'));
+    //         if (this.products){
+    //             this.products.forEach(product => {
+    //                 product.inBag = true;
+    //             })
+    //         } 
+    //     },
+    //     goToProduct(id){
+    //         this.$router.push({
+    //             name: 'product-page',
+    //             params: {
+    //                 id: id
+    //             }
+    //         })
+    //     },
+    //     toggleInBag(id){
+    //         this.products = this.products.filter(product => product.id != id)
+    //     }
+    // },
+    // mounted(){
+    //     this.getProducts()
+    // },
+// }
 </script>
 <style>
 .bubble{
