@@ -74,7 +74,7 @@ export default {
                         if(Number(newVal.price)<100){
                             this.isCheap = 'Yeah, it`s that cheap';
                         } else {
-                            this.isCheap = 'You might be a little broke for this...'
+                            this.isCheap = 'Yeah, it`s that expensive';
                         }
                     }
             }
