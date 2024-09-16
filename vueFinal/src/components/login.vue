@@ -25,6 +25,7 @@
 import { auth } from '@/main'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { formValidation } from '@/mixins/formValidation';
+import { useAdminStore } from '@/stores/adminStore';
 export default {
     name: 'login',
     mixins: [formValidation],
@@ -38,10 +39,10 @@ export default {
     },
     methods: {
         async login(){
+            const admin = useAdminStore();
             await signInWithEmailAndPassword(auth, this.form.email, this.form.password)
                 .then(userCredential => {
                     const user = userCredential.user;
-                    console.log(auth.currentUser);
                     alert('login is successful');
                     this.$router.push({name: 'home'});
                 })

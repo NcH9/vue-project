@@ -16,6 +16,7 @@
 </template>
 <script type="module">
 import product from '@/components/product.vue';
+import { useAdminStore } from '@/stores/adminStore';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 export default {
@@ -53,6 +54,8 @@ export default {
 
         onMounted(() => {
             getProductsInBag();
+            const admin = useAdminStore();
+            console.log(admin.isAdmin)
         });
 
         return {

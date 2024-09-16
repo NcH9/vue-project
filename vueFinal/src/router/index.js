@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/HomeView.vue'
 import IconSupport from '@/components/icons/IconSupport.vue'
+import { useAdminStore } from '@/stores/adminStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -59,7 +60,24 @@ const router = createRouter({
       name: 'admin-panel',
       component: () => import('../views/Admin.vue'),
     },
+    {
+      path: '/NotFound',
+      name: 'NotFound',
+      component: () => import('../views/NotFound.vue'),
+    },
   ]
 })
+
+
+router.beforeEach((to, from, next) => {
+  const admin = useAdminStore();
+  admin.getIsUserAdmin();
+  if (to.path === '/admin' && !admin.isAdmin) {
+    next('/NotFound'); // Если не авторизован, перенаправляем на страницу логина
+  } else {
+    next(); // Переходим на нужный маршрут
+  }
+})
+// admin.setUserAdmin(true);
 
 export default router
